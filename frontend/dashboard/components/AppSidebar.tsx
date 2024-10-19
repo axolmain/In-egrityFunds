@@ -52,9 +52,7 @@ export function AppSidebar() {
       {/* Sidebar Content */}
       <SidebarContent className='flex-1'>
         <SidebarGroup>
-          <SidebarGroupLabel className='border-b border-gray-200 dark:border-gray-700'>
-            INEGRITY
-          </SidebarGroupLabel>
+          <SidebarGroupLabel className=' '>INEGRITY</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
