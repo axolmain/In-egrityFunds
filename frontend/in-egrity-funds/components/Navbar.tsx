@@ -202,7 +202,7 @@ export default function Navbar() {
                           asChild
                           onClick={() =>
                             window.open(
-                              'https://app.inegrity.online/dashboard',
+                              'https://www.app.inegrity.online/',
                               '_blank'
                             )
                           }
