@@ -4,6 +4,7 @@ import { Transaction } from '../../types/financialTypes';
 interface AccountBalancesProps {
   transactions: Transaction[];
 }
+//
 
 const AccountBalances: React.FC<AccountBalancesProps> = ({ transactions }) => {
   // Aggregate the balances by account_id
@@ -41,5 +42,5 @@ const AccountBalances: React.FC<AccountBalancesProps> = ({ transactions }) => {
     </div>
   );
 };
-
+// test
 export default AccountBalances;
