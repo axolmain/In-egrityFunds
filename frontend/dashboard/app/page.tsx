@@ -9,6 +9,8 @@ import PlaidConnection from "@/components/PlaidConnection";
 import DashboardWidgets from "@/components/DashboardWidgets";
 import {encrypt} from "@/utils/encryption";
 import {setItem} from "@/utils/indexedDB";
+import TransactionsTable from "@/components/financialComponents/TransactionsTable";
+import {usePlaidTransactions} from "@/hooks/usePlaidTransactions";
 
 interface PlaidLinkResponse {
   link_token: string;
@@ -24,6 +26,7 @@ export default function Dashboard() {
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [plaidError, setPlaidError] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const { transactions, loading: transactionsLoading, error: transactionsError } = usePlaidTransactions(user?.sub || '');
 
   useEffect(() => {
     if (user) {
@@ -98,6 +101,13 @@ export default function Dashboard() {
 
         {/* Dashboard Widgets */}
         <DashboardWidgets />
+
+        {/* Transactions Table */}
+        {transactionsError ? (
+            <div className="text-red-500">{transactionsError}</div>
+        ) : (
+            <TransactionsTable transactions={transactions} />
+        )}
       </div>
   );
 }
