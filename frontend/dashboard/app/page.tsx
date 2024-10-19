@@ -1,101 +1,134 @@
-import Image from "next/image";
+'use client';
+import { useState, useEffect, MouseEvent } from 'react';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { useRouter } from 'next/navigation';
+import { usePlaidLink, PlaidLinkOptions } from 'react-plaid-link';
+import axios from 'axios';
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+interface PlaidLinkResponse {
+  link_token: string;
+}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+interface ExchangeTokenResponse {
+  access_token: string;
+}
+
+export default function Dashboard() {
+  const { user, isLoading, error: authError } = useUser();
+  const router = useRouter();
+  const [linkToken, setLinkToken] = useState<string | null>(null);
+  const [plaidError, setPlaidError] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      const createLinkToken = async () => {
+        try {
+          const response = await axios.post<PlaidLinkResponse>('/api/plaid/create-link-token', {
+            client_user_id: user.sub, // Using Auth0's user ID
+          });
+          setLinkToken(response.data.link_token);
+        } catch (error) {
+          console.error('Error generating link token:', error);
+          setPlaidError('Failed to initialize bank connection');
+        }
+      };
+      createLinkToken();
+    }
+  }, [user]);
+
+  const onSuccess = async (public_token: string) => {
+    try {
+      const response = await axios.post<ExchangeTokenResponse>('/api/plaid/exchange-token', {
+        public_token,
+        userId: user?.sub, // Include user ID for backend association
+      });
+      console.log('Access Token:', response.data.access_token);
+      setIsConnected(true);
+      // You might want to store this state in your database
+    } catch (error) {
+      console.error('Error exchanging public token:', error);
+      setPlaidError('Failed to connect bank account');
+    }
+  };
+
+  const config: PlaidLinkOptions = {
+    token: linkToken!,
+    onSuccess,
+  };
+
+  const { open, ready } = usePlaidLink(config);
+
+  const handlePlaidClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setPlaidError(null); // Reset any previous errors
+    open();
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    );
+  }
+
+  // Not authenticated
+  if (!user) {
+    router.push('/api/auth/login');
+    return null;
+  }
+
+  // Authentication error
+  if (authError) {
+    return (
+        <div className="p-4 text-red-500">
+          An error occurred: {authError.message}
+        </div>
+    );
+  }
+
+  return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Welcome, {user.name}</h1>
+          <p className="text-gray-600">Manage your financial dashboard</p>
+        </div>
+
+        {/* Plaid Connection Section */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-xl font-semibold mb-4">Bank Connection</h2>
+
+          {plaidError && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                {plaidError}
+              </div>
+          )}
+
+          {isConnected ? (
+              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                Your bank account is connected!
+              </div>
+          ) : (
+              <button
+                  onClick={handlePlaidClick}
+                  disabled={!ready || !linkToken}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+              >
+                {!linkToken ? 'Loading...' : 'Connect Your Bank'}
+              </button>
+          )}
+        </div>
+
+        {/* Dashboard Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Add your dashboard widgets/components here */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold mb-2">Account Overview</h3>
+            <p className="text-gray-600">Your dashboard content goes here.</p>
+          </div>
+        </div>
+      </div>
   );
 }

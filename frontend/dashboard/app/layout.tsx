@@ -25,14 +25,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+      <html lang='en'>
+      <head>
+        <title>Inegrity Funds</title>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+        <meta name="apple-mobile-web-app-title" content="Your PWA App"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+        <meta name="msapplication-TileColor" content="#2B5797"/>
+        <meta name="msapplication-tap-highlight" content="no"/>
+      </head>
       <UserProvider>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          {children}
+        {children}
         </body>
       </UserProvider>
-    </html>
+      </html>
   );
 }
