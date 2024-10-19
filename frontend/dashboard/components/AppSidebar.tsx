@@ -73,7 +73,7 @@ export function AppSidebar() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton
-                    className={`flex items-center gap-2 text-sm hover:bg-gray-100 rounded-md transition-colors`}
+                    className={`flex items-center gap-2 w-full text-sm hover:bg-gray-100 rounded-md transition-colors p-0`}
                   >
                     {/* Avatar centered when collapsed */}
                     <div
@@ -94,10 +94,10 @@ export function AppSidebar() {
                       </Avatar>
                     </div>
 
-                    {/* Show user name and email when sidebar is expanded */}
+                    {/* Show email when sidebar is expanded, closer to the avatar */}
                     {state === 'expanded' && (
-                      <div className='flex flex-col text-left ml-2'>
-                        <span className='text-xs text-gray-500 dark:text-gray-400'>
+                      <div className='flex flex-col text-left ml-1'>
+                        <span className='text-xs text-gray-500 dark:text-gray-400 pr-[100px]'>
                           {user.email || 'user@example.com'}
                         </span>
                       </div>
