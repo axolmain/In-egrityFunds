@@ -1,0 +1,12 @@
+{
+  "theme_color": "#8936FF",
+  "background_color": "#f0ead6",
+  "orientation": "any",
+  "display": "standalone",
+  "dir": "auto",
+  "lang": "en-US",
+  "name": "inegrityfunds",
+  "short_name": "inegrity",
+  "start_url": "/",
+  "description": "A verifiably data-secure budgeting app"
+}
