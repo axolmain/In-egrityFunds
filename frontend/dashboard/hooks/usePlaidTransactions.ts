@@ -2,13 +2,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getItem, setItem } from '@/utils/indexedDB'; // IndexedDB utilities
 
-interface Transaction {
-    id: string;
-    name: string;
-    amount: number;
-    date: string;
-}
-
 export function usePlaidTransactions(userId: string | undefined) {
     const [transactions, setTransactions] = useState<Transaction[]>([]); // Initialize as empty array
     const [loading, setLoading] = useState(true);
