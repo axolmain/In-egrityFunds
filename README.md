@@ -1,4 +1,4 @@
-# In-egrityFunds
+# In'egrity Funds
 
 ## Personal Safety
 
