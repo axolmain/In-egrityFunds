@@ -7,7 +7,6 @@ import { decrypt } from '@/utils/encryption';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
-import {Button} from "@/components/ui/button";
 
 interface PlaidConnectionProps {
   linkToken: string | null;
@@ -88,11 +87,13 @@ const PlaidConnection: FC<PlaidConnectionProps> = ({
   }
 
   return linkToken ? (
-          <Button
-              onClick={handlePlaidClick} // Show the Plaid connection form
-              className=' px-4 py-2 rounded mb-6'
-          >Add Bank
-          </Button>
+    <button
+      onClick={handlePlaidClick}
+      disabled={!ready}
+      className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50'
+    >
+      Connect Your Bank
+    </button>
   ) : (
     <div>Loading...</div>
   );

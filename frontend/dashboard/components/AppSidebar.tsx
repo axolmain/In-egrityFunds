@@ -36,7 +36,7 @@ const items = [
   { title: 'Home', url: '/', icon: Home },
   { title: 'Budgets', url: '/budgets', icon: DollarSign },
   { title: 'Connections', url: '/connections', icon: Landmark },
-  { title: 'Widgets', url: '/overview', icon: Calendar },
+  { title: 'Calendar', url: '/overview', icon: Calendar },
   { title: 'Search', url: '#', icon: Search },
   { title: 'Settings', url: '#', icon: Settings },
 ];
