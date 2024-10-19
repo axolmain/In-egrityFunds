@@ -28,6 +28,7 @@ export default function Dashboard() {
   const [isConnected, setIsConnected] = useState(false);
   const { transactions, loading: transactionsLoading, error: transactionsError } = usePlaidTransactions(user?.sub || '');
 
+  //TODO: abstract away
   useEffect(() => {
     if (user) {
       const createLinkToken = async () => {
@@ -45,11 +46,12 @@ export default function Dashboard() {
     }
   }, [user]);
 
+  //TODO: abstract away
   const onSuccess = async (public_token: string) => {
     try {
       const response = await axios.post<ExchangeTokenResponse>('/api/plaid/exchange-token', {
         public_token,
-        userId: user?.sub, // Include user ID for backend association
+        userId: user?.sub,
       });
 
       const accessToken = response.data.access_token;
