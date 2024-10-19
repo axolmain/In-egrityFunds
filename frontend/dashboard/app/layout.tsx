@@ -41,14 +41,13 @@ export default function RootLayout({
     <html lang='en'>
       <UserProvider>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-900`}
         >
           <div className='flex'>
             <SidebarProvider>
               <AppSidebar />
-              <main>
+              <main className='flex-1 p-6'>
                 <SidebarTrigger />
-
                 {children}
               </main>
             </SidebarProvider>
