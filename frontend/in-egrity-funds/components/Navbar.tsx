@@ -4,13 +4,24 @@ import Link from 'next/link';
 import { Button } from './ui/button';
 import React, { useState, useRef, useEffect } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { LogOut, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
-  const { user, error, isLoading } = useUser(); // Use Auth0's useUser hook
+  const { user, error, isLoading } = useUser();
+  const router = useRouter();
 
   const handleMenuClose = () => {
     setMenuOpen(false);
@@ -49,6 +60,10 @@ export default function Navbar() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  const handleLogout = () => {
+    router.push('/api/auth/logout');
+  };
 
   return (
     <header
@@ -150,13 +165,32 @@ export default function Navbar() {
                 </Button>
               )}
               {!isLoading && !error && user && (
-                <Link href='/profile' className='rounded-full overflow-hidden'>
-                  <img
-                    src={user.picture || ''}
-                    alt={user.name || 'User'}
-                    className='h-8 w-8 rounded-full'
-                  />
-                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Avatar className='cursor-pointer'>
+                      <AvatarImage
+                        src={user.picture || ''}
+                        alt={user.name || 'User'}
+                      />
+                      <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className='w-56'>
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem asChild>
+                        <Link href='/profile'>
+                          <User className='mr-2 h-4 w-4' />
+                          <span>Profile</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={handleLogout}>
+                        <LogOut className='mr-2 h-4 w-4' />
+                        <span>Logout</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               )}
             </div>
           </nav>
