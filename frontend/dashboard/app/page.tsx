@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import UserGreeting from "@/components/UserGreeting";
-import PlaidConnection from "@/components/PlaidConnection";
-import DashboardWidgets from "@/components/DashboardWidgets";
-import {encrypt} from "@/utils/encryption";
-import {setItem} from "@/utils/indexedDB";
-import TransactionsTable from "@/components/financialComponents/TransactionsTable";
-import {usePlaidTransactions} from "@/hooks/usePlaidTransactions";
+import UserGreeting from '@/components/UserGreeting';
+import PlaidConnection from '@/components/PlaidConnection';
+import { encrypt } from '@/utils/encryption';
+import { setItem } from '@/utils/indexedDB';
+import TransactionsTable from '@/components/financialComponents/TransactionsTable';
+import { usePlaidTransactions } from '@/hooks/usePlaidTransactions';
+import WidgetSection from '@/components/WidgetSection';
+import KPIWidget from '@/components/KPIWidget';
 
 interface PlaidLinkResponse {
   link_token: string;
@@ -26,16 +27,23 @@ export default function Dashboard() {
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [plaidError, setPlaidError] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const { transactions, loading: transactionsLoading, error: transactionsError } = usePlaidTransactions(user?.sub || '');
+  const {
+    transactions,
+    loading: transactionsLoading,
+    error: transactionsError,
+  } = usePlaidTransactions(user?.sub || '');
 
   //TODO: abstract away
   useEffect(() => {
     if (user) {
       const createLinkToken = async () => {
         try {
-          const response = await axios.post<PlaidLinkResponse>('/api/plaid/create-link-token', {
-            client_user_id: user.sub, // Using Auth0's user ID
-          });
+          const response = await axios.post<PlaidLinkResponse>(
+            '/api/plaid/create-link-token',
+            {
+              client_user_id: user.sub, // Using Auth0's user ID
+            }
+          );
           setLinkToken(response.data.link_token);
         } catch (error) {
           console.error('Error generating link token:', error);
@@ -49,10 +57,13 @@ export default function Dashboard() {
   //TODO: abstract away
   const onSuccess = async (public_token: string) => {
     try {
-      const response = await axios.post<ExchangeTokenResponse>('/api/plaid/exchange-token', {
-        public_token,
-        userId: user?.sub,
-      });
+      const response = await axios.post<ExchangeTokenResponse>(
+        '/api/plaid/exchange-token',
+        {
+          public_token,
+          userId: user?.sub,
+        }
+      );
 
       const accessToken = response.data.access_token;
       console.log('Access Token:', accessToken);
@@ -71,9 +82,9 @@ export default function Dashboard() {
   // Loading state
   if (isLoading) {
     return (
-        <div className="flex justify-center items-center min-h-screen">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
-        </div>
+      <div className='flex justify-center items-center min-h-screen'>
+        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900'></div>
+      </div>
     );
   }
 
@@ -85,31 +96,39 @@ export default function Dashboard() {
 
   // Authentication error
   if (authError) {
-    return <div className="p-4 text-red-500">An error occurred: {authError.message}</div>;
+    return (
+      <div className='p-4 text-red-500'>
+        An error occurred: {authError.message}
+      </div>
+    );
   }
 
   return (
-      <div className="container mx-auto px-4 py-8">
-        {/* User Greeting */}
-        <UserGreeting />
+    <div className='container mx-auto px-4 py-8'>
+      {/* User Greeting */}
+      <UserGreeting />
 
-        {/* Plaid Connection Section */}
-        <PlaidConnection
-            linkToken={linkToken}
-            onSuccess={onSuccess}
-            plaidError={plaidError}
-            ready={Boolean(linkToken)}
-        />
+      {/* Plaid Connection Section */}
+      <PlaidConnection
+        linkToken={linkToken}
+        onSuccess={onSuccess}
+        plaidError={plaidError}
+        ready={Boolean(linkToken)}
+      />
 
-        {/* Dashboard Widgets */}
-        <DashboardWidgets />
+      {/* KPI Widget Section */}
+      <WidgetSection>
+        <KPIWidget title='Total Revenue' value={150000} />
+        <KPIWidget title='Total Expenses' value={90000} />
+        <KPIWidget title='Net Profit' value={60000} />
+      </WidgetSection>
 
-        {/* Transactions Table */}
-        {transactionsError ? (
-            <div className="text-red-500">{transactionsError}</div>
-        ) : (
-            <TransactionsTable transactions={transactions} />
-        )}
-      </div>
+      {/* Transactions Table */}
+      {transactionsError ? (
+        <div className='text-red-500'>{transactionsError}</div>
+      ) : (
+        <TransactionsTable transactions={transactions} />
+      )}
+    </div>
   );
 }

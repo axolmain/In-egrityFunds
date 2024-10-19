@@ -49,9 +49,6 @@ export default function RootLayout({
                 {/* Abstracted Navbar */}
                 <Navbar />
 
-                {/* Abstracted Widget Section */}
-                <WidgetSection />
-
                 {/* Main Content */}
                 <main className='flex-1 p-6 bg-gray-50 dark:bg-gray-900'>
                   {children}
