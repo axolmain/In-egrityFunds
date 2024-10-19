@@ -2,12 +2,12 @@
 
 ## Personal Safety
 
-   - "" \approx Financial safety
+   - "" $\approx$ Financial safety
    - Home/Family
    - Cite/Reference
    - Church/GC
 
-# Ethical Practices
+## Ethical Practices
 
    - Title IX AI bias avoiding because of how we store data
    - "Can't"/"won't" use data in any way that isn't given with informed consent
