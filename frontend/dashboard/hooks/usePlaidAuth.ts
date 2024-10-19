@@ -1,8 +1,8 @@
 // hooks/usePlaidAuth.ts
 import { useState, useEffect } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { getItem } from '@/utils/indexedDB';  // Fetch stored Plaid token from IndexedDB
-import { decrypt } from '@/utils/encryption';  // Decrypt the token
+import { getItem } from '@/utils/indexedDB'; // Get the access token from IndexedDB
+import { decrypt } from '@/utils/encryption'; // Decrypt the access token from IndexedDB
 
 export function usePlaidAuth() {
     const { user } = useUser();
@@ -12,26 +12,17 @@ export function usePlaidAuth() {
     useEffect(() => {
         async function loadPlaidToken() {
             if (user?.sub) {
-                console.log(`Fetching encrypted Plaid token for user: ${user.sub}`);
-
-                try {
-                    const encryptedToken = await getItem(user.sub);  // Retrieve the token from IndexedDB
-                    if (encryptedToken) {
-                        console.log('Encrypted token retrieved, attempting to decrypt...');
-                        const token = decrypt(encryptedToken);
-                        setPlaidToken(token);
-                        console.log('Token successfully decrypted and set.');
-                    } else {
-                        console.warn(`No encrypted token found for user: ${user.sub}`);
+                const encryptedToken = await getItem(user.sub); // Retrieve the token from IndexedDB
+                if (encryptedToken) {
+                    try {
+                        const token = decrypt(encryptedToken); // Decrypt the token
+                        setPlaidToken(token); // Set the token to state
+                    } catch (error) {
+                        console.error('Error decrypting token', error);
                     }
-                } catch (error) {
-                    console.error('Error retrieving or decrypting token:', error);
                 }
-            } else {
-                console.warn('No user found, skipping token retrieval.');
             }
             setLoading(false);
-            console.log('Loading state set to false.');
         }
 
         loadPlaidToken();

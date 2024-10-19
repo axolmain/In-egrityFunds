@@ -7,6 +7,8 @@ import axios from 'axios';
 import UserGreeting from "@/components/UserGreeting";
 import PlaidConnection from "@/components/PlaidConnection";
 import DashboardWidgets from "@/components/DashboardWidgets";
+import {encrypt} from "@/utils/encryption";
+import {setItem} from "@/utils/indexedDB";
 
 interface PlaidLinkResponse {
   link_token: string;
@@ -46,9 +48,15 @@ export default function Dashboard() {
         public_token,
         userId: user?.sub, // Include user ID for backend association
       });
-      console.log('Access Token:', response.data.access_token);
+
+      const accessToken = response.data.access_token;
+      console.log('Access Token:', accessToken);
+
+      // Encrypt and save the access token to IndexedDB
+      const encryptedToken = encrypt(accessToken);
+      await setItem(user?.sub!, encryptedToken);
+
       setIsConnected(true);
-      // You might want to store this state in your database
     } catch (error) {
       console.error('Error exchanging public token:', error);
       setPlaidError('Failed to connect bank account');
