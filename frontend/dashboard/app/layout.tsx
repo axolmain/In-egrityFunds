@@ -7,7 +7,7 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import Footer from '@/components/ui/footer';
 import { AppSidebar } from '@/components/AppSidebar';
 import Navbar from '@/components/Navbar'; // Abstracted Navbar
-import WidgetSection from '@/components/WidgetSection';
+import { Toaster } from '@/components/ui/toaster';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -46,16 +46,13 @@ export default function RootLayout({
             <SidebarProvider>
               <AppSidebar />
               <div className='flex-1 flex flex-col'>
-                {/* Abstracted Navbar */}
                 <Navbar />
 
                 {/* Main Content */}
                 <main className='flex-1 p-6 bg-gray-50 dark:bg-gray-900'>
                   {children}
                 </main>
-
-                {/* Footer */}
-                <Footer />
+                <Toaster />
               </div>
             </SidebarProvider>
           </div>
