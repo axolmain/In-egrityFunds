@@ -8,7 +8,7 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import Footer from '@/components/ui/footer';
-import { AppSidebar } from '@/components/app-sidebar';
+import { AppSidebar } from '@/components/AppSidebar';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -48,6 +48,7 @@ export default function RootLayout({
               <AppSidebar />
               <main>
                 <SidebarTrigger />
+
                 {children}
               </main>
             </SidebarProvider>
