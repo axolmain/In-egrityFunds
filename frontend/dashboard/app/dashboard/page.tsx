@@ -1,9 +1,12 @@
+// app/page.tsx
 'use client';
-import { useState, useEffect, MouseEvent } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useRouter } from 'next/navigation';
-import { usePlaidLink, PlaidLinkOptions } from 'react-plaid-link';
 import axios from 'axios';
+import UserGreeting from "@/components/UserGreeting";
+import PlaidConnection from "@/components/PlaidConnection";
+import DashboardWidgets from "@/components/DashboardWidgets";
 
 interface PlaidLinkResponse {
   link_token: string;
@@ -52,19 +55,6 @@ export default function Dashboard() {
     }
   };
 
-  const config: PlaidLinkOptions = {
-    token: linkToken!,
-    onSuccess,
-  };
-
-  const { open, ready } = usePlaidLink(config);
-
-  const handlePlaidClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setPlaidError(null); // Reset any previous errors
-    open();
-  };
-
   // Loading state
   if (isLoading) {
     return (
@@ -82,53 +72,24 @@ export default function Dashboard() {
 
   // Authentication error
   if (authError) {
-    return (
-        <div className="p-4 text-red-500">
-          An error occurred: {authError.message}
-        </div>
-    );
+    return <div className="p-4 text-red-500">An error occurred: {authError.message}</div>;
   }
 
   return (
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Welcome, {user.name}</h1>
-          <p className="text-gray-600">Manage your financial dashboard</p>
-        </div>
+        {/* User Greeting */}
+        <UserGreeting user={user} />
 
         {/* Plaid Connection Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4">Bank Connection</h2>
+        <PlaidConnection
+            linkToken={linkToken}
+            onSuccess={onSuccess}
+            plaidError={plaidError}
+            ready={Boolean(linkToken)}
+        />
 
-          {plaidError && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                {plaidError}
-              </div>
-          )}
-
-          {isConnected ? (
-              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-                Your bank account is connected!
-              </div>
-          ) : (
-              <button
-                  onClick={handlePlaidClick}
-                  disabled={!ready || !linkToken}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-              >
-                {!linkToken ? 'Loading...' : 'Connect Your Bank'}
-              </button>
-          )}
-        </div>
-
-        {/* Dashboard Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Add your dashboard widgets/components here */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-2">Account Overview</h3>
-            <p className="text-gray-600">Your dashboard content goes here.</p>
-          </div>
-        </div>
+        {/* Dashboard Widgets */}
+        <DashboardWidgets />
       </div>
   );
 }
