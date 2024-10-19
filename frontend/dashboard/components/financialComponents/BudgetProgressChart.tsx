@@ -1,21 +1,26 @@
-import {Budget} from "@/types/financialTypes";
-import {Progress} from "@/components/ui/progress";
+import { Budget } from "@/types/financialTypes";
 
 interface BudgetProgressChartProps {
-    budget: Budget
+    budget: Budget;
+    categoryProgress: number;  // Add categoryProgress prop
 }
 
-export default function BudgetProgressChart({ budget }: BudgetProgressChartProps) {
-    const { name, amount, spent } = budget;
-    const progress = Math.min((spent / amount) * 100, 100);
+export default function BudgetProgressChart({ budget, categoryProgress }: BudgetProgressChartProps) {
+    const { name, amount } = budget;
+
+    // Use categoryProgress to calculate the spent value
+    const spent = categoryProgress;
+    const progress = Math.min((spent / amount) * 100, 100); // Ensure progress is capped at 100%
+
+    // Determine bar color: green if within budget, red if over budget
+    const barColor = spent > amount ? 'bg-red-500' : 'bg-green-500';
 
     return (
-        // <Progress title={name} value={progress}/>
         <div className="p-4 bg-white shadow-md rounded">
             <h3 className="text-lg font-semibold mb-2">{name}</h3>
             <div className="relative h-6 bg-gray-200 rounded-full">
                 <div
-                    className="absolute top-0 left-0 h-full bg-green-500 rounded-full transition-all duration-300"
+                    className={`absolute top-0 left-0 h-full ${barColor} rounded-full transition-all duration-300`}
                     style={{ width: `${progress}%` }}
                 ></div>
             </div>
