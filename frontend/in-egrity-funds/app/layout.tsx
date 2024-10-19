@@ -19,15 +19,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <UserProvider>
-        <head>
-          {/* Preload Video Poster as Image */}
-          <link
-            rel='preload'
-            href='/homeHero/solar-farm-poster.webp'
-            as='image'
-            type='image/webp'
-          />
-        </head>
+        <head></head>
         <body className={inter.className} suppressHydrationWarning={true}>
           <main className='relative'>
             <Navbar />
