@@ -12,7 +12,7 @@ export function usePlaidAuth() {
     useEffect(() => {
         async function loadPlaidToken() {
             if (user?.sub) {
-                const encryptedToken = await getItem(user.sub); // Retrieve the token from IndexedDB
+                const encryptedToken: any = await getItem(user.sub); // Retrieve the token from IndexedDB
                 if (encryptedToken) {
                     try {
                         const token = decrypt(encryptedToken); // Decrypt the token

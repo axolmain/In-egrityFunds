@@ -12,7 +12,7 @@ export function encrypt(data: any): string {
     }
 }
 
-export function decrypt(ciphertext: string): any {
+export function decrypt(ciphertext: any): any {
     try {
         const bytes = AES.decrypt(ciphertext, SECRET_KEY);
         return JSON.parse(bytes.toString(enc.Utf8));
