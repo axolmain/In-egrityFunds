@@ -147,71 +147,88 @@ export default function Navbar() {
               )}
             </div>
             <div className='flex w-full flex-col space-y-2 lg:w-auto lg:flex-row lg:items-center lg:space-x-2 lg:space-y-0'>
-              {!isLoading && !error && !user && (
-                <Button
-                  className={`w-full rounded-full py-2 text-center transition-all duration-300 lg:w-auto ${
-                    scrolled || menuOpen
-                      ? 'bg-primary text-sm text-white'
-                      : 'bg-primary text-base text-white'
-                  }`}
-                  asChild
-                >
-                  <Link
-                    href='/api/auth/login'
-                    className='px-3'
-                    onClick={handleMenuClose}
+              {/* Wrapping container with consistent width */}
+              <div style={{ minWidth: '130px' }}>
+                {isLoading && (
+                  <div
+                    style={{
+                      width: '60%', // Placeholder maintains the size
+                      height: '40px',
+                      backgroundColor: '#e0e0e0',
+                      borderRadius: '20px',
+                    }}
+                  />
+                )}
+
+                {!isLoading && !error && !user && (
+                  <Button
+                    className={`w-full rounded-full py-2 text-center transition-all duration-300 lg:w-auto ${
+                      scrolled || menuOpen
+                        ? 'bg-primary text-sm text-white'
+                        : 'bg-primary text-base text-white'
+                    }`}
+                    asChild
                   >
-                    Login
-                  </Link>
-                </Button>
-              )}
-              {!isLoading && !error && user && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Avatar className='cursor-pointer'>
-                      {user?.picture ? (
-                        <AvatarImage
-                          src={user.picture}
-                          alt={user.name || 'User'}
-                        />
-                      ) : (
-                        <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
-                      )}
-                    </Avatar>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className='w-56'>
-                    <DropdownMenuGroup>
-                      {/* Dashboard link opens in a new tab */}
-                      <DropdownMenuItem
-                        asChild
-                        onClick={() =>
-                          window.open(
-                            'https://app.inegrity.online/dashboard',
-                            '_blank'
-                          )
-                        }
-                      >
-                        <div>
-                          <MdDashboard className='mr-2 h-4 w-4' />
-                          <span>Dashboard</span>
-                        </div>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem asChild>
-                        <Link href='/profile'>
-                          <User className='mr-2 h-4 w-4' />
-                          <span>Profile</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleLogout}>
-                        <LogOut className='mr-2 h-4 w-4' />
-                        <span>Logout</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
+                    <Link
+                      href='/api/auth/login'
+                      className='px-3'
+                      onClick={handleMenuClose}
+                    >
+                      Login
+                    </Link>
+                  </Button>
+                )}
+
+                {!isLoading && !error && user && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Avatar className='cursor-pointer'>
+                        {user?.picture ? (
+                          <AvatarImage
+                            src={user.picture}
+                            alt={user.name || 'User'}
+                          />
+                        ) : (
+                          <AvatarFallback>
+                            {user.name?.charAt(0)}
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className='w-56'>
+                      <DropdownMenuGroup>
+                        {/* Dashboard link opens in a new tab */}
+                        <DropdownMenuItem
+                          asChild
+                          onClick={() =>
+                            window.open(
+                              'https://app.inegrity.online/dashboard',
+                              '_blank'
+                            )
+                          }
+                        >
+                          <div>
+                            <MdDashboard className='mr-2 h-4 w-4' />
+                            <span>Dashboard</span>
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link href='/profile'>
+                            <User className='mr-2 h-4 w-4' />
+                            <span>Profile</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleLogout}>
+                          <LogOut className='mr-2 h-4 w-4' />
+                          <span>Logout</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+              </div>
             </div>
           </nav>
         </div>
