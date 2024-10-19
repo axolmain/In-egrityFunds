@@ -6,32 +6,27 @@ export interface Testimonial {
 export const testimonials: Testimonial[] = [
   {
     content:
-      "We've used Luxorum for multiple properties now, and their service has been exceptional every time. We appreciate how much control we had over the entire process. Luxorum made going solar easy and affordable.",
-    location: "Temecula, CA",
+      'Inegrity offers top-notch privacy and security, giving me peace of mind with my financial data. I trust them to keep my information safe.',
+    location: 'New York, NY',
   },
   {
     content:
-      "As a retired Marine, I've dealt with my share of salespeople, and I have to say, Luxorum was a breath of fresh air. No sales tactics, just honest information and straightforward options. I loved that I was in control the entire time and didn't have to deal with any middlemen. Our electric bill is already so much lower, and I'm thrilled with the service we received.",
-    location: "Lake Havasu City, AZ",
+      'The level of security provided by Inegrity is outstanding. I feel secure knowing my sensitive financial information is protected.',
+    location: 'San Francisco, CA',
   },
   {
     content:
-      "I had a terrible experience with another solar company, but Luxorum completely turned things around for us. They offered multiple options, and we could pick the installer that best suited our needs without any pressure. Now, we have a solar system we can trust, and it’s all thanks to Luxorum’s no-nonsense approach.",
-    location: "Las Vegas, NV",
+      "Inegrity's focus on privacy and secure transactions makes managing my investments stress-free. It's great to have a platform I can rely on.",
+    location: 'Austin, TX',
   },
   {
     content:
-      "I was skeptical about solar after some bad experiences, but Luxorum changed my mind. They provided transparent, honest information and allowed me to choose the installer I was most comfortable with. No pushy salespeople, just great service and even better pricing. I highly recommend them!",
-    location: "Houston, TX",
+      'Their commitment to security and privacy is what sets Inegrity apart. I can manage my investments confidently, knowing my data is safe.',
+    location: 'Chicago, IL',
   },
   {
     content:
-      "We did our research and chose Luxorum because they let us compare multiple installers and find the best deal. The process was seamless, and we loved that there were no salespeople involved. Now, we’re saving a ton on our electric bill every month, and we couldn’t be happier.",
-    location: "Mission Viejo, CA",
-  },
-  {
-    content:
-      "Luxorum was fantastic from start to finish. They provided clear options, no pressure, and the best pricing we could find. The installation was quick and professional, and we loved that we were in control the whole time. I’m thoroughly impressed and would recommend them to anyone looking to go solar.",
-    location: "Fort Worth, TX",
+      'Inegrity’s secure platform ensures my financial information stays private. I highly recommend it for anyone who values data security.',
+    location: 'Miami, FL',
   },
 ];
