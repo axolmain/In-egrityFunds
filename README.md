@@ -14,4 +14,4 @@
      
 ## Tech Stack
 
-[](https://stackshare.io/nlunce/in-egrityfunds#stack)
+[link](https://stackshare.io/nlunce/in-egrityfunds#stack)
