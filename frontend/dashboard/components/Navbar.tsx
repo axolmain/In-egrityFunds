@@ -17,7 +17,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 
 const Navbar = () => {
   return (
-    <nav className='bg-gray-50 dark:bg-gray-900 shadow-sm py-2 px-4 flex justify-between items-center'>
+    <nav className='sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 shadow-sm py-2 px-4 flex justify-between items-center'>
       <div className='flex items-center'>
         {/* Sidebar Trigger */}
         <SidebarTrigger className='mr-4' />

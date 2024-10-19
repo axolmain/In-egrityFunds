@@ -71,12 +71,12 @@ export interface TransactionsTableProps {
 }
 
 export interface Budget {
-    id?: number; // Auto-incremented primary key
+    id?: number;
     name: string;
     amount: number;
     spendingCategories: string;
     spent: 0;
-    timePeriod: 'monthly' | 'weekly' | 'yearly'; // Time period options
+    timePeriod: 'monthly' | 'weekly' | 'yearly';
 }
 
 export interface BudgetFormProps {
