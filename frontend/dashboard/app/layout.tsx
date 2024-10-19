@@ -3,9 +3,11 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import './globals.css';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import Footer from '@/components/ui/footer';
 import { AppSidebar } from '@/components/AppSidebar';
+import Navbar from '@/components/Navbar'; // Abstracted Navbar
+import WidgetSection from '@/components/WidgetSection';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -40,13 +42,24 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-900`}
         >
-          <div className='flex'>
+          <div className='flex h-screen'>
             <SidebarProvider>
               <AppSidebar />
-              <main className='flex-1 p-6'>
-                <SidebarTrigger />
-                {children}
-              </main>
+              <div className='flex-1 flex flex-col'>
+                {/* Abstracted Navbar */}
+                <Navbar />
+
+                {/* Abstracted Widget Section */}
+                <WidgetSection />
+
+                {/* Main Content */}
+                <main className='flex-1 p-6 bg-gray-50 dark:bg-gray-900'>
+                  {children}
+                </main>
+
+                {/* Footer */}
+                <Footer />
+              </div>
             </SidebarProvider>
           </div>
         </body>
