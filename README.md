@@ -1,4 +1,4 @@
-# In-egrityFunds
+# In'egrity Funds
 
 ## Personal Safety
 
@@ -11,3 +11,7 @@
 
    - Title IX AI bias avoiding because of how we store data
    - "Can't"/"won't" use data in any way that isn't given with informed consent
+     
+## Tech Stack
+
+[link](https://stackshare.io/nlunce/in-egrityfunds#stack)
