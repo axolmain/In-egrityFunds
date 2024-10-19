@@ -169,20 +169,32 @@ export default function Navbar() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Avatar className='cursor-pointer'>
-                      <AvatarImage
-                        src={user.picture || ''}
-                        alt={user.name || 'User'}
-                      />
-                      <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+                      {user?.picture ? (
+                        <AvatarImage
+                          src={user.picture}
+                          alt={user.name || 'User'}
+                        />
+                      ) : (
+                        <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+                      )}
                     </Avatar>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className='w-56'>
                     <DropdownMenuGroup>
-                      <DropdownMenuItem asChild>
-                        <Link href='/dashboard'>
+                      {/* Dashboard link opens in a new tab */}
+                      <DropdownMenuItem
+                        asChild
+                        onClick={() =>
+                          window.open(
+                            'https://app.inegrity.online/dashboard',
+                            '_blank'
+                          )
+                        }
+                      >
+                        <div>
                           <MdDashboard className='mr-2 h-4 w-4' />
                           <span>Dashboard</span>
-                        </Link>
+                        </div>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
