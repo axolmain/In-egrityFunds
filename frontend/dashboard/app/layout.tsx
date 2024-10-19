@@ -2,9 +2,13 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import './globals.css';
-import {Sidebar, SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
-import Footer from "@/components/ui/footer";
-import {AppSidebar} from "@/components/app-sidebar";
+import {
+  Sidebar,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/components/ui/sidebar';
+import Footer from '@/components/ui/footer';
+import { AppSidebar } from '@/components/app-sidebar';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -28,12 +32,18 @@ export const metadata: Metadata = {
   applicationName: 'Inegrity Funds',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-      <html lang="en">
+    <html lang='en'>
       <UserProvider>
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <div className="flex">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <div className='flex'>
             <SidebarProvider>
               <AppSidebar />
               <main>
@@ -45,6 +55,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
         </body>
       </UserProvider>
-      </html>
+    </html>
   );
 }
