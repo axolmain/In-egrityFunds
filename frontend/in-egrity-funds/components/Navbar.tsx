@@ -120,7 +120,7 @@ export default function Navbar() {
         >
           <nav className='flex w-full flex-col lg:flex-row lg:items-center lg:space-x-6'>
             <div className='flex w-full flex-col lg:flex-grow lg:flex-row lg:items-center lg:justify-center lg:space-x-0'>
-              {['/why-inegrity', '/our-difference', '/faqs'].map(
+              {['/why-inegrity', '/our-difference', '/security'].map(
                 (link, index) => (
                   <Button
                     variant='ghost'

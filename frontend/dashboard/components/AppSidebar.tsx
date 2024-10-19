@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { useRouter } from 'next/navigation';
 
 // Menu items
 const items = [
@@ -43,6 +44,10 @@ const items = [
 export function AppSidebar() {
   const { user, isLoading, error } = useUser();
   const { state } = useSidebar(); // Get the state of the sidebar (collapsed or expanded)
+  const router = useRouter();
+  const handleLogout = () => {
+    router.push('/api/auth/logout'); // Redirect to Auth0 logout route
+  };
 
   return (
     <Sidebar
@@ -122,7 +127,9 @@ export function AppSidebar() {
                   <DropdownMenuItem>Account</DropdownMenuItem>
                   <DropdownMenuItem>Billing</DropdownMenuItem>
                   <DropdownMenuItem>Notifications</DropdownMenuItem>
-                  <DropdownMenuItem>Log out</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Log out
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>
