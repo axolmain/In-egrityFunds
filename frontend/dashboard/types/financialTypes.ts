@@ -1,6 +1,6 @@
 import {UserProfile} from "@auth0/nextjs-auth0/client";
 
-interface Transaction {
+export interface Transaction {
     account_id: string;
     account_owner: string | null;
     amount: number;

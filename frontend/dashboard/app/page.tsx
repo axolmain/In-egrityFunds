@@ -1,6 +1,4 @@
-// app/page.tsx
 'use client';
-import { useState, useEffect } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -12,6 +10,8 @@ import TransactionsTable from '@/components/financialComponents/TransactionsTabl
 import { usePlaidTransactions } from '@/hooks/usePlaidTransactions';
 import WidgetSection from '@/components/WidgetSection';
 import KPIWidget from '@/components/KPIWidget';
+import {useEffect, useState} from "react";
+import {round} from "@floating-ui/utils";
 
 interface PlaidLinkResponse {
   link_token: string;
@@ -33,16 +33,42 @@ export default function Dashboard() {
     error: transactionsError,
   } = usePlaidTransactions(user?.sub || '');
 
-  //TODO: abstract away
+  // State to store metrics
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [totalExpenses, setTotalExpenses] = useState(0);
+  const [netProfit, setNetProfit] = useState(0);
+
+  // Calculate metrics based on transactions
+  useEffect(() => {
+    if (transactions && transactions.length > 0) {
+      let revenue = 0;
+      let expenses = 0;
+
+      transactions.forEach((transaction) => {
+        if (transaction.amount < 0) {
+          revenue += transaction.amount;
+        } else if (transaction.amount > 0) {
+          expenses += transaction.amount;
+        }
+      });
+
+      // FIX PRICING
+      setTotalRevenue(-round(revenue * 100) / 100);
+      setTotalExpenses(-round(expenses * 100) / 100);
+      setNetProfit(round((-expenses - revenue) * 100) / 100);
+    }
+  }, [transactions]);
+
+  // Generate the Plaid link token
   useEffect(() => {
     if (user) {
       const createLinkToken = async () => {
         try {
           const response = await axios.post<PlaidLinkResponse>(
-            '/api/plaid/create-link-token',
-            {
-              client_user_id: user.sub, // Using Auth0's user ID
-            }
+              '/api/plaid/create-link-token',
+              {
+                client_user_id: user.sub, // Using Auth0's user ID
+              }
           );
           setLinkToken(response.data.link_token);
         } catch (error) {
@@ -54,15 +80,14 @@ export default function Dashboard() {
     }
   }, [user]);
 
-  //TODO: abstract away
   const onSuccess = async (public_token: string) => {
     try {
       const response = await axios.post<ExchangeTokenResponse>(
-        '/api/plaid/exchange-token',
-        {
-          public_token,
-          userId: user?.sub,
-        }
+          '/api/plaid/exchange-token',
+          {
+            public_token,
+            userId: user?.sub,
+          }
       );
 
       const accessToken = response.data.access_token;
@@ -82,9 +107,9 @@ export default function Dashboard() {
   // Loading state
   if (isLoading) {
     return (
-      <div className='flex justify-center items-center min-h-screen'>
-        <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900'></div>
-      </div>
+        <div className='flex justify-center items-center min-h-screen'>
+          <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900'></div>
+        </div>
     );
   }
 
@@ -97,38 +122,38 @@ export default function Dashboard() {
   // Authentication error
   if (authError) {
     return (
-      <div className='p-4 text-red-500'>
-        An error occurred: {authError.message}
-      </div>
+        <div className='p-4 text-red-500'>
+          An error occurred: {authError.message}
+        </div>
     );
   }
 
   return (
-    <div className='container mx-auto px-4 py-8'>
-      {/* User Greeting */}
-      <UserGreeting />
+      <div className='container mx-auto px-4 py-8'>
+        {/* User Greeting */}
+        <UserGreeting />
 
-      {/* Plaid Connection Section */}
-      <PlaidConnection
-        linkToken={linkToken}
-        onSuccess={onSuccess}
-        plaidError={plaidError}
-        ready={Boolean(linkToken)}
-      />
+        {/* Plaid Connection Section */}
+        <PlaidConnection
+            linkToken={linkToken}
+            onSuccess={onSuccess}
+            plaidError={plaidError}
+            ready={Boolean(linkToken)}
+        />
 
-      {/* KPI Widget Section */}
-      <WidgetSection>
-        <KPIWidget title='Total Revenue' value={150000} />
-        <KPIWidget title='Total Expenses' value={90000} />
-        <KPIWidget title='Net Profit' value={60000} />
-      </WidgetSection>
+        {/* KPI Widget Section */}
+        <WidgetSection>
+          <KPIWidget title='Total Revenue' value={totalRevenue} />
+          <KPIWidget title='Total Expenses' value={totalExpenses} />
+          <KPIWidget title='Net Profit' value={netProfit} />
+        </WidgetSection>
 
-      {/* Transactions Table */}
-      {transactionsError ? (
-        <div className='text-red-500'>{transactionsError}</div>
-      ) : (
-        <TransactionsTable transactions={transactions} />
-      )}
-    </div>
+        {/* Transactions Table */}
+        {transactionsError ? (
+            <div className='text-red-500'>{transactionsError}</div>
+        ) : (
+            <TransactionsTable transactions={transactions} />
+        )}
+      </div>
   );
 }

@@ -1,4 +1,5 @@
 import {Budget} from "@/types/financialTypes";
+import {Progress} from "@/components/ui/progress";
 
 interface BudgetProgressChartProps {
     budget: Budget
@@ -9,6 +10,7 @@ export default function BudgetProgressChart({ budget }: BudgetProgressChartProps
     const progress = Math.min((spent / amount) * 100, 100);
 
     return (
+        // <Progress title={name} value={progress}/>
         <div className="p-4 bg-white shadow-md rounded">
             <h3 className="text-lg font-semibold mb-2">{name}</h3>
             <div className="relative h-6 bg-gray-200 rounded-full">

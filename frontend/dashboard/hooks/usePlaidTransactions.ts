@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { getItem, setItem } from '@/utils/indexedDB'; // IndexedDB utilities
+import { getItem, setItem } from '@/utils/indexedDB';
+import {Transaction} from "@/types/financialTypes"; // IndexedDB utilities
 
 export function usePlaidTransactions(userId: string | undefined) {
     const [transactions, setTransactions] = useState<Transaction[]>([]); // Initialize as empty array

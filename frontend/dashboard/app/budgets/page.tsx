@@ -55,12 +55,12 @@ export default function Budgets() {
                 ))}
             </div>
 
-            {/* List of budgets with edit and delete options */}
-            <BudgetList
-                budgets={budgets}
-                onEdit={setSelectedBudget}
-                onDelete={deleteBudget}
-            />
+            {/*/!* List of budgets with edit and delete options *!/*/}
+            {/*<BudgetList*/}
+            {/*    budgets={budgets}*/}
+            {/*    onEdit={setSelectedBudget}*/}
+            {/*    onDelete={deleteBudget}*/}
+            {/*/>*/}
         </div>
     );
 }

@@ -25,6 +25,7 @@ export default function TransactionsTable({
           <TableHead>Category</TableHead>
           <TableHead>Amount</TableHead>
           <TableHead>Date</TableHead>
+          <TableHead>Type</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -34,15 +35,16 @@ export default function TransactionsTable({
             <TableCell>{transaction.category}</TableCell>
             <TableCell
               className={
-                transaction.amount < 0 ? 'text-red-600' : 'text-green-600'
+                transaction.amount > 0 ? 'text-red-600' : 'text-green-600'
               }
             >
-              {transaction.amount < 0 ? '-' : ''}$
+              {transaction.amount < 0 ? '' : '-'}$
               {Math.abs(transaction.amount).toFixed(2)}
             </TableCell>
             <TableCell>
               {new Date(transaction.date).toLocaleDateString()}
             </TableCell>
+            <TableCell>{transaction.transaction_type}</TableCell>
           </TableRow>
         ))}
       </TableBody>
