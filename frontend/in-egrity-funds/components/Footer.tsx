@@ -77,7 +77,7 @@ const Footer = () => {
 
         <div className='mt-6 w-full'>
           <p className='text-center text-sm text-gray-600'>
-            &copy; {new Date().getFullYear()} Luxorum. All rights reserved.
+            &copy; {new Date().getFullYear()} Inegrity. All rights reserved.
           </p>
         </div>
       </div>
