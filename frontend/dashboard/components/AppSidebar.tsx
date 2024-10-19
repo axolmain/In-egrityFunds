@@ -1,5 +1,5 @@
 'use client';
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react';
+import { Calendar, Home, Inbox, Search, Settings, DollarSign } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -23,7 +23,8 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 
 // Menu items
 const items = [
-  { title: 'Home', url: '#', icon: Home },
+  { title: 'Home', url: '/', icon: Home },
+  { title: 'Budgets', url: 'budgets', icon: DollarSign },
   { title: 'Inbox', url: '#', icon: Inbox },
   { title: 'Calendar', url: '#', icon: Calendar },
   { title: 'Search', url: '#', icon: Search },

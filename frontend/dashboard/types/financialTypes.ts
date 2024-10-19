@@ -67,3 +67,11 @@ interface PlaidAuth {
 interface TransactionsTableProps {
     transactions: Transaction[];
 }
+
+export interface Budget {
+    id?: number; // Auto-incremented primary key
+    name: string;
+    amount: number;
+    spent: number;
+    timePeriod: 'monthly' | 'weekly' | 'yearly'; // Time period options
+}
