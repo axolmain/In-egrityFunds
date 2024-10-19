@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {TransactionsTableProps} from "@/types/financialTypes";
+import { TransactionsTableProps } from '@/types/financialTypes';
 
 export default function TransactionsTable({
   transactions,
