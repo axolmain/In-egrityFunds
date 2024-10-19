@@ -15,10 +15,12 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { LogOut, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import StudentMngmt from "@/components/dbHelpers/StudentMngmt";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showStudentMngmt, setShowStudentMngmt] = useState(false); // State to control rendering of StudentMngmt component
   const menuRef = useRef<HTMLDivElement>(null);
   const { user, error, isLoading } = useUser();
   const router = useRouter();
@@ -64,6 +66,15 @@ export default function Navbar() {
   const handleLogout = () => {
     router.push('/api/auth/logout');
   };
+
+  const handleShowStudentMngmt = () => {
+    setShowStudentMngmt(true); // Show the StudentMngmt component
+  };
+
+  // Conditionally render the StudentMngmt component or Navbar
+  if (showStudentMngmt) {
+    return <StudentMngmt />;
+  }
 
   return (
     <header
@@ -127,20 +138,34 @@ export default function Navbar() {
                     asChild
                     key={index}
                   >
-                    <Link
-                      href={link}
-                      className={`w-full px-4 transition-all duration-300 ${
-                        scrolled || menuOpen
-                          ? 'text-sm text-black'
-                          : 'text-base text-white'
-                      }`}
-                      onClick={handleMenuClose}
-                    >
-                      {link
-                        .replace(/\//g, '')
-                        .replace(/-/g, ' ') // Replaces all dashes with spaces
-                        .replace(/\b\w/g, (l) => l.toUpperCase())}
-                    </Link>
+                    {link === '/why-inegrity' ? (
+                      <Button
+                        variant='ghost'
+                        onClick={handleShowStudentMngmt} // Show StudentMngmt when "Why Inegrity" is clicked
+                        className={`w-full px-4 transition-all duration-300 ${
+                          scrolled || menuOpen
+                            ? 'text-sm text-black'
+                            : 'text-base text-white'
+                        }`}
+                      >
+                        Why Integrity
+                      </Button>
+                    ) : (
+                      <Link
+                        href={link}
+                        className={`w-full px-4 transition-all duration-300 ${
+                          scrolled || menuOpen
+                            ? 'text-sm text-black'
+                            : 'text-base text-white'
+                        }`}
+                        onClick={handleMenuClose}
+                      >
+                        {link
+                          .replace(/\//g, '')
+                          .replace(/-/g, ' ')
+                          .replace(/\b\w/g, (l) => l.toUpperCase())}
+                      </Link>
+                    )}
                   </Button>
                 )
               )}
