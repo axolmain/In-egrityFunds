@@ -1,12 +1,9 @@
+// layout.tsx
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import './globals.css';
-import {
-  Sidebar,
-  SidebarProvider,
-  SidebarTrigger,
-} from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import Footer from '@/components/ui/footer';
 import { AppSidebar } from '@/components/AppSidebar';
 
@@ -52,7 +49,6 @@ export default function RootLayout({
               </main>
             </SidebarProvider>
           </div>
-          <Footer />
         </body>
       </UserProvider>
     </html>

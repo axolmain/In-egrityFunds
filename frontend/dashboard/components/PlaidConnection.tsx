@@ -1,9 +1,15 @@
 import { FC, MouseEvent } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
 import { usePlaidAuth } from '@/hooks/usePlaidAuth';
+<<<<<<< HEAD
 import {getItem} from "@/utils/indexedDB";
 import {decrypt} from "@/utils/encryption";
 import {useUser} from "@auth0/nextjs-auth0/client";
+=======
+import { Button } from '@/components/ui/button'; // Import Button from Shadcn
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'; // Shadcn Alert for better error and success states
+import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react'; // Icons from Lucide for visual feedback
+>>>>>>> ff693ce (layout)
 
 interface PlaidConnectionProps {
   linkToken: string | null;
@@ -12,7 +18,12 @@ interface PlaidConnectionProps {
   ready: boolean;
 }
 
-const PlaidConnection: FC<PlaidConnectionProps> = ({ linkToken, onSuccess, plaidError, ready }) => {
+const PlaidConnection: FC<PlaidConnectionProps> = ({
+  linkToken,
+  onSuccess,
+  plaidError,
+  ready,
+}) => {
   const { open } = usePlaidLink({
     token: linkToken!,
     onSuccess,
@@ -43,20 +54,34 @@ const PlaidConnection: FC<PlaidConnectionProps> = ({ linkToken, onSuccess, plaid
 
   // If loading, show a loading state
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className='flex justify-center items-center'>
+        <Loader2 className='animate-spin h-5 w-5 mr-2' /> Loading...
+      </div>
+    );
   }
 
   // If the user is already connected (plaidToken exists), show a success message
   if (plaidToken) {
     return (
+<<<<<<< HEAD
         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
           Your bank account is already connected!
         </div>
+=======
+      <Alert>
+        <CheckCircle className='h-4 w-4' />
+        <AlertTitle>Bank Connected</AlertTitle>
+        <AlertDescription>
+          Your bank account is already connected!
+        </AlertDescription>
+      </Alert>
+>>>>>>> ff693ce (layout)
     );
   }
 
-  // If not connected, show the Plaid connection button
   return (
+<<<<<<< HEAD
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <h2 className="text-xl font-semibold mb-4">Bank Connection</h2>
         {plaidError && (
@@ -76,6 +101,31 @@ const PlaidConnection: FC<PlaidConnectionProps> = ({ linkToken, onSuccess, plaid
             <div>Loading...</div>
         )}
       </div>
+=======
+    <div className='bg-white rounded-lg shadow-md p-6 mb-8'>
+      <h2 className='text-xl font-semibold mb-4'>Bank Connection</h2>
+
+      {/* Show error if there's a Plaid connection error */}
+      {plaidError && (
+        <Alert variant='destructive'>
+          <AlertCircle className='h-4 w-4' />
+          <AlertTitle>Connection Error</AlertTitle>
+          <AlertDescription>{plaidError}</AlertDescription>
+        </Alert>
+      )}
+
+      {/* Show the Plaid connection button if linkToken is available */}
+      {linkToken ? (
+        <Button onClick={handlePlaidClick} disabled={!ready} className='w-full'>
+          Connect Your Bank
+        </Button>
+      ) : (
+        <div className='flex justify-center items-center'>
+          <Loader2 className='animate-spin h-5 w-5 mr-2' /> Initializing...
+        </div>
+      )}
+    </div>
+>>>>>>> ff693ce (layout)
   );
 };
 
