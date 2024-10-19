@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { LogOut, User } from 'lucide-react';
+import { MdDashboard } from 'react-icons/md'; // Importing the dashboard icon
 import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
@@ -177,6 +178,13 @@ export default function Navbar() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className='w-56'>
                     <DropdownMenuGroup>
+                      <DropdownMenuItem asChild>
+                        <Link href='/dashboard'>
+                          <MdDashboard className='mr-2 h-4 w-4' />
+                          <span>Dashboard</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
                         <Link href='/profile'>
                           <User className='mr-2 h-4 w-4' />
