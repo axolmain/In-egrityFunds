@@ -65,22 +65,13 @@ export default function ConnectionsPage() {
       <h1 className='text-2xl font-bold mb-4'>Bank Connections</h1>
 
       {/* Add Bank Button */}
-      <Button
-        onClick={() => setShowPlaidConnection(true)} // Show the Plaid connection form
-        className=' px-4 py-2 rounded mb-6'
-      >
-        Add Bank
-      </Button>
-
-      {/* Display the Plaid Connection only when user clicks 'Add Bank' */}
-      {showPlaidConnection && (
-        <PlaidConnection
+      <PlaidConnection
           linkToken={linkToken}
           onSuccess={() => fetchConnectedAccounts()}
           plaidError={plaidError}
           ready={Boolean(linkToken)}
         />
-      )}
+      
 
       {/* Connected Banks Section */}
       <div className='mt-8'>
