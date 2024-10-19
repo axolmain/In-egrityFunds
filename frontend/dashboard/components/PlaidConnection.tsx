@@ -1,6 +1,6 @@
-// components/PlaidConnection.tsx
 import { FC, MouseEvent } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
+import { usePlaidAuth } from '@/hooks/usePlaidAuth';  // Import your custom hook to check Plaid connection status
 
 interface PlaidConnectionProps {
     linkToken: string | null;
@@ -20,6 +20,24 @@ const PlaidConnection: FC<PlaidConnectionProps> = ({ linkToken, onSuccess, plaid
         open();
     };
 
+    // Use the custom hook to check if the user is already connected to Plaid
+    const { plaidToken, loading } = usePlaidAuth();
+
+    // If loading, show a loading state
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    // If the user is already connected (plaidToken exists), show a success message
+    if (plaidToken) {
+        return (
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                Your bank account is already connected!
+            </div>
+        );
+    }
+
+    // If not connected, show the Plaid connection button
     return (
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-xl font-semibold mb-4">Bank Connection</h2>
