@@ -7,5 +7,6 @@
   "lang": "en-US",
   "name": "inegrityfunds",
   "short_name": "inegrity",
-  "start_url": "localhost:3000/"
+  "start_url": "/",
+  "description": "A verifiably data-secure budgeting app"
 }
