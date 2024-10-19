@@ -1,14 +1,16 @@
 // app/budgets/page.tsx
 'use client';
 import { useState } from 'react';
-import BudgetForm from '@/components/financialComponents/BudgetForm';
 import BudgetProgressChart from '@/components/financialComponents/BudgetProgressChart';
 import BudgetList from '@/components/financialComponents/BudgetList';
 import {useBudgets} from "@/hooks/UseBudgets";
+import {BudgetForm} from "@/components/financialComponents/BudgetForm";
+import {useUser} from "@auth0/nextjs-auth0/client";
 
 export default function Budgets() {
     const { budgets, loading, error, addBudget, updateBudget, deleteBudget } = useBudgets('user-id-placeholder');
-    const [selectedBudget, setSelectedBudget] = useState<any>(null); // Initializing selectedBudget as null
+    const [selectedBudget, setSelectedBudget] = useState<any>(null);
+    const { user } = useUser();
 
     if (loading) {
         return (
@@ -42,6 +44,7 @@ export default function Budgets() {
                     onSubmit={handleSubmitBudget}
                     initialData={selectedBudget || undefined}
                     onCancel={() => setSelectedBudget(null)}
+                    user={user}
                 />
             </div>
 

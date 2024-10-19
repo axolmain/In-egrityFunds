@@ -1,99 +1,183 @@
-// components/financialComponents/BudgetForm.tsx
-import { useState, useEffect } from 'react';
+import React, { useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Budget, BudgetFormProps } from "@/types/financialTypes";
+import { usePlaidTransactions } from "@/hooks/usePlaidTransactions";
 
-interface BudgetFormProps {
-    onSubmit: (budgetData: any) => void;
-    initialData?: any;
-    onCancel?: () => void;
-}
+const createFormSchema = (spendingCategories: string[]) => z.object({
+    name: z.string().min(2, {
+        message: "Budget name must be at least 2 characters.",
+    }),
+    amount: z.number().min(0, {
+        message: "Amount must be a positive number.",
+    }),
+    timePeriod: z.enum(["monthly", "weekly", "yearly"]),
+    spendingCategories: z.enum(spendingCategories as [string, ...string[]]),
+});
 
-export default function BudgetForm({ onSubmit, initialData = {}, onCancel }: BudgetFormProps) {
-    const [name, setName] = useState(initialData.name || '');
-    const [amount, setAmount] = useState(initialData.amount || 0);
-    const [timePeriod, setTimePeriod] = useState(initialData.timePeriod || 'monthly'); // Default to 'monthly'
+export function BudgetForm({ onSubmit, initialData = {}, onCancel, user }: BudgetFormProps) {
+    const {
+        transactions,
+        loading: transactionsLoading,
+        error: transactionsError,
+    } = usePlaidTransactions(user?.sub || '');
 
-    useEffect(() => {
-        // Update form fields when the initialData changes
-        setName(initialData.name || '');
-        setAmount(initialData.amount || 0);
-        setTimePeriod(initialData.timePeriod || 'monthly');
-    }, [initialData]);
+    const spendingCategories = useMemo(() =>
+            Array.from(new Set(transactions.flatMap(t => t.category))),
+        [transactions]
+    );
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const budgetData = { name, amount, timePeriod };
+    const formSchema = useMemo(() => createFormSchema(spendingCategories), [spendingCategories]);
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: initialData.name || "",
+            amount: initialData.amount || 0,
+            timePeriod: initialData.timePeriod || "monthly",
+            spendingCategories: initialData.spendingCategories || '',
+        },
+    });
+
+    function handleSubmit(values: z.infer<typeof formSchema>) {
+        const budgetData: Budget = {
+            ...values,
+            spent: initialData.spent || 0,
+            id: initialData.id
+        };
         onSubmit(budgetData);
-        // Reset the form after submission
-        setName('');
-        setAmount(0);
-        setTimePeriod('monthly');
-    };
+        form.reset();
+    }
+
+    if (transactionsLoading) {
+        return <div>Loading spending categories...</div>;
+    }
+
+    if (transactionsError) {
+        return <div>Error loading spending categories. Please try again.</div>;
+    }
+
+    if (spendingCategories.length === 0) {
+        return <div>No spending categories available. Please add some transactions first.</div>;
+    }
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-                    Budget Name
-                </label>
-                <input
-                    id="name"
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="E.g., Groceries, Entertainment"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                    required
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+                <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Budget Name</FormLabel>
+                            <FormControl>
+                                <Input placeholder="E.g., Groceries, Entertainment" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                                Enter a name for your budget category.
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
-            </div>
-
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="amount">
-                    Budget Amount
-                </label>
-                <input
-                    id="amount"
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(Number(e.target.value))}
-                    placeholder="Enter budget amount"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                    required
+                <FormField
+                    control={form.control}
+                    name="amount"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Budget Amount</FormLabel>
+                            <FormControl>
+                                <Input type="number" placeholder="Enter budget amount" {...field} onChange={e => field.onChange(+e.target.value)} />
+                            </FormControl>
+                            <FormDescription>
+                                Enter the amount for this budget category.
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
-            </div>
-
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="timePeriod">
-                    Time Period
-                </label>
-                <select
-                    id="timePeriod"
-                    value={timePeriod}
-                    onChange={(e) => setTimePeriod(e.target.value)}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                >
-                    <option value="monthly">Monthly</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="yearly">Yearly</option>
-                </select>
-            </div>
-
-            <div className="flex items-center justify-between">
-                <button
-                    type="submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                >
-                    {initialData && initialData.id ? 'Update Budget' : 'Add Budget'}
-                </button>
-                {onCancel && (
-                    <button
-                        type="button"
-                        onClick={onCancel}
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-4"
-                    >
-                        Cancel
-                    </button>
-                )}
-            </div>
-        </form>
+                <FormField
+                    control={form.control}
+                    name="timePeriod"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Time Period</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a time period" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="monthly">Monthly</SelectItem>
+                                    <SelectItem value="weekly">Weekly</SelectItem>
+                                    <SelectItem value="yearly">Yearly</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <FormDescription>
+                                Choose the time period for this budget.
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="spendingCategories"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Spending Category</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value || undefined}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a spending category" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {spendingCategories.map((category) => (
+                                        <SelectItem key={category} value={category}>
+                                            {category}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FormDescription>
+                                Choose the spending category for this budget.
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <div className="flex justify-between">
+                    <Button type="submit">
+                        {initialData.id ? 'Update Budget' : 'Add Budget'}
+                    </Button>
+                    {onCancel && (
+                        <Button type="button" variant="destructive" onClick={onCancel}>
+                            Cancel
+                        </Button>
+                    )}
+                </div>
+            </form>
+        </Form>
     );
 }

@@ -1,3 +1,5 @@
+import {UserProfile} from "@auth0/nextjs-auth0/client";
+
 interface Transaction {
     account_id: string;
     account_owner: string | null;
@@ -59,12 +61,12 @@ interface Transaction {
     website: string | null;
 }
 
-interface PlaidAuth {
+export interface PlaidAuth {
     userId: string;
     value: Transaction[];
 }
 
-interface TransactionsTableProps {
+export interface TransactionsTableProps {
     transactions: Transaction[];
 }
 
@@ -72,6 +74,14 @@ export interface Budget {
     id?: number; // Auto-incremented primary key
     name: string;
     amount: number;
-    spent: number;
+    spendingCategories: string;
+    spent: 0;
     timePeriod: 'monthly' | 'weekly' | 'yearly'; // Time period options
+}
+
+export interface BudgetFormProps {
+    onSubmit: (budgetData: Budget) => void;
+    initialData?: Partial<Budget>;
+    onCancel?: () => void;
+    user: any;
 }
