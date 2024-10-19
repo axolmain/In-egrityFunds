@@ -1,5 +1,5 @@
-import { Transaction } from 'plaid';
 import React from 'react';
+import { Transaction } from '../../types/financialTypes';
 
 interface AccountBalancesProps {
   transactions: Transaction[];
