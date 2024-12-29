@@ -11,7 +11,7 @@ export const rightSectionContent = {
   header: 'Get Rewarded for',
   headerHighlight: 'Saving Smart',
   paragraph:
-    'Maximize your savings, track your spending, and even uncover new ways to grow your wealth. With [Your App Name], you take control of your finances, unlocking opportunities to save more and live better.',
+    'Maximize your savings, track your spending, and even uncover new ways to grow your wealth. With Inegrity, you take control of your finances, unlocking opportunities to save more and live better.',
 };
 
 export const leftSectionContent = {
